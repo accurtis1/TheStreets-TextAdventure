@@ -1,4 +1,3 @@
-from sys import exit
 from random import randint
 from textwrap import fill
 from time import sleep
@@ -16,7 +15,7 @@ from time import sleep
 # the time. Now, I kind of feel silly if someone were to actually
 # look at them - they seem like big blocks of plain unnecessarity.
 #
-# Also, I feel like this is a perfect example of spaghetti code.
+# Also, I feel like this is a good example of spaghetti code.
 # I'm just too inexperienced at OOP to make it more efficient and
 # aesthetically pleasing.
 #
@@ -25,11 +24,19 @@ from time import sleep
 
 
 ########## OBJECTIVES #############
-# Implement specialized commands
-# Figure out how to finagle quests
-# Figure out wtf you're going to do for the manhole
+# Add bar guy and girl quest
+# Add fancy woman quest
+# Add chef quest
+# Implement talk methods for everyone
+# Implement play method for pool shark
+# ^ Add sleep shit so it isn't as text-y
+# Figure out wtf you're going to do for the sewers
 # Finish descriptions
-#
+# Fix buy and sell functions so that everyone doesn't return an error
+# Optimize lottery ticket
+# Optimize anything that requires additional input
+# ^ In that thread, optimize jukebox song selection
+
 # BEFORE FINALIZATION:
 # Take out """ from sleep in user_input
 # (it's just annoying when I'm trying to fly
@@ -56,6 +63,8 @@ from time import sleep
 # Fixed fight methods for drunk and boxer
 # Added old man quest
 # Fixed bug w/ dude if you have 2 tacos
+# Added 'play' and 'smoke' functions
+
 
 
 
@@ -165,7 +174,9 @@ items = {"hat":"A fancy-looking top hat. Maybe the rabbit costs extra...",
          "old man":"A disabled man in a wheelchair with a plethora of white hair.",
          "man":None,
          "pool shark":"Your average pool shark, ready to challenge whoever comes\
- his way. You can 'play pool' if you want to, maybe try to make some cash...",
+ his way. You can play if you want to, maybe try to make some cash...",
+         "pool":None,
+         "shark":None,
          "cashier":"A sweet looking girl manning the cash register.",
          "woman":"A fancy, stuck-up woman with her head in the clouds.",
          "chef":"A pleasant, portly gentleman with a considerable amount of skill.",
@@ -834,7 +845,10 @@ class LotteryTicket(Misc):
 """]
 
     def scratch(self, scene):
-        #I tried doing this in one big while loop but it just didn't work out
+        #I tried doing this in one big while loop but it just didn't work out.
+        #In fact, there /has/ to be a better way of doing it that isn't as
+        #inefficient and ugly, but that's not my priority at the moment.
+        #Will fix later.
         print(self.show_scratch[0])
         while True:
             try:
@@ -1023,7 +1037,7 @@ class Jukebox(Misc):
  
     def play(self):
         print(fill("You approach the jukebox with some hip songs in mind, but you discover\
- that they all seem rather country. And they all have an odd theme, but you just can't pull your\
+ that they all seem rather country. And they all have an odd theme, but you can't pull your\
  finger on it...",100))
         print()
         print("Songs available in the jukebox:")
@@ -1032,7 +1046,7 @@ class Jukebox(Misc):
             print("{}. {}".format(i, song))
             i += 1
         print()
-        print("Go ahead, pick a title to listen to.")
+        print("Go ahead, pick a number to listen to.")
 
 class SteamedLobster(Misc):
     def __init__(self):
@@ -1194,6 +1208,9 @@ class Vendor(Npc):
             item = real_item[item]
             if isinstance(item, CashWeapons):
                 print(item)
+                
+    def sell(self):
+        print("What do you want to sell?")
 
 class StreetDude(Npc):
     def __init__(self):
@@ -1233,6 +1250,12 @@ class StreetDude(Npc):
  map saved my life. I don't need it anymore, but I *really* need a taco." """,100))
                 print()
                 print("This sounds like a good deal...maybe you should find the guy a taco...")
+                
+    def buy(self):
+        print("There's nothing to buy off this guy.")
+        
+    def sell(self):
+        print("There's nothing he wants to buy off of you.")
 
 class Bartender(Npc):
     def __init__(self):
@@ -1252,15 +1275,35 @@ class Bartender(Npc):
         for item in self.inventory:
             item = real_item[item]
             print(item)
+            
+    def sell(self):
+        print("What do you want to sell?")
 
 class BarGuy(Npc):
     def __init__(self):
         self.name = "guy"
-        self.money = 15
+
+    def talk(self):
+        print("You approach the anxious-looking guy. He grins at you then,\
+ as if he realizes grinning is too much, tones it down to a smile.")
+    
+    def buy(self):
+        print("There's nothing to buy off of this guy.")
+    
+    def sell(self):
+        print("He doesn't want to buy anything off of you.")
 
 class BarGirl(Npc):
     def __init__(self):
         self.name = "girl"
+
+    #Must implement talk method
+    
+    def buy(self):
+        print("She has nothing to sell you.")
+        
+    def sell(self):
+        print(fill("You try to sell her your body, but she doesn't exactly appreciate it.",100))
 
 class OldMan(Npc):
     def __init__(self):
@@ -1291,12 +1334,131 @@ class OldMan(Npc):
             print()
             print(fill("It seems this man's been cut off. Oh well, what could one more drink hurt? Now you\
  just need to get him something with bourbon in it...",100))
+ 
+    def buy(self):
+        print("There's nothing to buy off of this guy.")
+        
+    def sell(self):
+        print("He doesn't want to buy anything.")
     
 
 class PoolShark(Npc):
     def __init__(self):
         self.name = "pool shark"
         self.money = 300
+
+    #Must implement talk method
+    
+    def play(self):
+        
+        #Need to add sleeps
+        
+        print(fill("You attempt to swagger your way across the room to the pool shark,\
+ but you end up tripping on your own feet and knocking somebody's beer over. That\
+ was impressive.",100))
+        print("Have you played this guy before?")
+        print()
+        run = True
+        while run:
+            play = input("> ").lower()
+            if play == "yes" or play == "y":
+                run = False
+            else:
+                print(fill("The shark lays out the name of the game. You each\
+ have three shots. If you get more in the pockets than him, you win\
+ all the money. If there is a tie, you get your money back. If he\
+ gets more in than you, he wins your money.",100))
+                print()
+                run = False
+        print("How much do you want to bet?")
+        print()
+        run = True
+        while run:
+            bet = float(input("> "))
+            if bet > player.money:
+                print("You can't afford to make that bet.")
+                print()
+            elif bet > self.money:
+                print("The pool shark can't afford a bet that high.")
+            else:
+                print("You make a bet of ${:.2f}.".format(bet))
+                #sleep
+                print()
+                run = False
+        player_score = 0
+        shark_score = 0
+        break_ = randint(1,2)
+        ball = randint(1, 2)
+        if break_ == 1:
+            print("You grab a cue and break.")
+            #sleep
+        elif break_ == 2:
+            print("The shark grabs a cue and breaks.")
+            #sleep
+        print()
+        if ball == 1:
+            print("Looks like you're solids!")
+            type = "solids"
+            #sleep
+            print()
+        elif ball == 2:
+            print("Looks like you're stripes!")
+            type = "stripes"
+            #sleep
+            print()
+        if type == "solids":
+            ball_one = randint(1,3)
+            ball_two = randint(4,7)
+        elif type == "stripes":
+            ball_one = randint(9,11)
+            ball_two = randint(12,15)
+        turn = 0
+        run = True
+        while run:
+            print("You have two good shots. Do you hit ball {} or\
+ {}?".format(ball_one, ball_two))
+            print()
+            try:
+                shot1 = int(input("> "))
+                if shot1 == ball_one:
+                    ball = ball_one
+                    run = False
+                elif shot1 == ball_two:
+                    ball = ball_two
+                    run = False
+                else:
+                    print("Please choose {} or {}.".format(ball_one, ball_two))
+            except:
+                print("Please choose a number.")
+            print("You aim your sights at the {} ball,\
+    line up your shot, hit the cue ball, and...".format(ball))
+            miss = 1
+            hit = randint(1,3)
+            if hit == miss:
+                print("Damn it, you missed!")
+                print()
+                turn += 1
+            else:
+                print("You got it!")
+                print()
+                player_score += 1
+                turn += 1
+            
+        #One shot is fully outlined. I need a more streamlined way to
+        #handle multiple shots and also handle the shark's shots.
+        #Find a way to loop back through the above 3 times with intermittent
+        #shark shots, or just loop through the above and then do the shark's
+        #shots.
+            
+        
+        
+
+    def buy(self):
+        print("He doesn't have anything to sell you.")
+    
+    def sell(self):
+        print(fill("He would buy your soul if he could...but he doesn't want\
+ anything you have right now.",100))
 
 class Cashier(Npc):
     def __init__(self):
@@ -1310,22 +1472,55 @@ class Cashier(Npc):
         for item in self.inventory:
             item = real_item[item]
             print(item)
+    
+    def sell(self, item):
+        print("What do you want to sell?")
 
 class FancyWoman(Npc):
     def __init__(self):
         self.name = "woman"
         self.money = randint(50,70)
+    
+    #Must implement talk method     
+    
+    def buy(self):
+        print("You really think she needs your money?")
+        
+    def sell(self):
+        print("You really think she wants to buy something off of you?")
+
 
 class Chef(Npc):
     def __init__(self):
         self.name = "chef"
-        self.inventory = ["steamed lobster"]
+        self.inventory = ["bruschetta", "crostini",
+        "insalata caprese"]
+      
+    #Must implement talk method
+    
+    def buy(self):
+        print("This is what the chef has available:")
+        print()
+        for item in self.inventory:
+            item = real_item[item]
+            print(item)
+    
+    def sell(self):
+        print("Sorry, the chef does not buy food back.")
+        
         
 class Fighter(Npc):
     def __init__(self):
         self.name = "fighter"
         self.inventory = ["boxing gloves"]
-
+    
+    #Must implement talk method
+    
+    def buy(self):
+        print("He doesn't have anything to sell.")
+        
+    def sell(self):
+        print("He doesn't want to buy anything off of you.")
 
 #                    -----======(   ITEMS   )======-----
 
@@ -1406,6 +1601,8 @@ real_item = {"attendant":Attendant(),
              "old man":OldMan(),
              "man":OldMan(),
              "pool shark":PoolShark(),
+             "pool":PoolShark(),
+             "shark":PoolShark(),
              "cashier":Cashier(),
              "woman":FancyWoman(),
              "chef":Chef(),
@@ -1422,7 +1619,7 @@ class Player:
         self.hp = 100
         self.money = 100
         self.classy = 0
-        self.inventory = [Fists(), Lipstick(), Taco(), BoxingGloves()]
+        self.inventory = [Fists(), Lipstick(), BoxingGloves(), LotteryTicket()]
 
     def print_inventory(self):
         print("Weapons:")
@@ -1972,7 +2169,8 @@ class Bar(Scene):
     room_objects = ["jukebox"]
     room_items = ["long island", "limoncello", "mint julep",
     "cigar", "lottery ticket", "cell phone", "leather wallet", "broken bottle"]
-    room_characters = ["guy", "girl", "old man", "man", "bartender", "pool shark"]
+    room_characters = ["guy", "girl", "old man", "man", "bartender", "pool shark",
+    "pool", "shark"]
     room_enemies = ["drunk"] 
 
     def __init__(self):
@@ -2218,8 +2416,6 @@ class Restaurant(Scene):
     def buy(self, item):
         print("{} added to inventory.".format(item.name.capitalize()))
         player.inventory.append(item)
-        vendor = real_item["vendor"]
-        vendor.inventory.remove(item.name)
         player.money -= item.value
         
     def sell(self, item):
@@ -2430,8 +2626,8 @@ class UserInput():
                 print("inv, status,")
                 print("look, take, go,")
                 print("eat, drink, wear,")
+                print("buy, buy from, sell,")
                 print("talk, fight,")
-                print("buy, sell,")
                 print("quit")
                 print()
                 print("'look' will be your best friend in this game")
@@ -2685,8 +2881,12 @@ class UserInput():
                         noun = real_item[noun]
                         if isinstance(noun, Npc):
                             noun.talk()
+                    elif (noun in self.scene.room_objects or
+                    noun in self.scene.room_items or
+                    noun in self.scene.room_enemies):
+                        print(fill("'{}' either can't or doesn't want to talk to you.".format(noun.capitalize()),100))
                     else:
-                        print(fill("'{}' either can't talk or is not in this area.".format(noun.capitalize()), 100))
+                        print(fill("I don't see '{}' here.".format(noun), 100))
                 else:
                     print(fill("You start talking to yourself. Some people look\
  at you strangely. Maybe you should find someone to talk to...", 100))
@@ -2780,6 +2980,15 @@ class UserInput():
                             noun.play()
                         else:
                             print("Sorry, you can't play '{}'.".format(noun))
+                    elif (noun == "pool shark" or
+                    noun == "pool" or noun == "shark"):
+                        if "pool shark" in self.scene.room_characters:
+                            found = True
+                            noun = real_item[noun]
+                            noun.play()
+                        else:
+                            found = True
+                            print("There's no '{}' here.".format(noun))
                     elif (noun in self.scene.room_items or
                     noun in self.scene.room_characters or
                     noun in self.scene.room_enemies):
@@ -2793,10 +3002,31 @@ class UserInput():
                         print("I don't see '{}' in this room.".format(noun))
                 else:
                     print("Play what? You can't just start playing with yourself.")
+                    
+
+            elif (verb == "1" or
+            verb == "2" or
+            verb == "3" or
+            verb == "4"):
+                if "jukebox" in self.scene.room_objects:
+                    if verb == "1":
+                        print("The jukebox starts playing Toot-Scootin' Boogie.")
+                    elif verb == "2":
+                        print("The jukebox starts playing My Achy Breaky Fart and the girl is appeased!")
+                    elif verb == "3":
+                        print("The jukebox starts playing The Devil Passed Gas in Georgia.")
+                    elif verb == "4":
+                        print("The jukebox starts playing Bathroom Blues.")
+                    else:
+                        print("Please pick song 1, 2, 3, or 4.")
+                    #Do something so that the jukebox actually does something
+                else:
+                    print(fill("I'm not sure what you're trying to do. Type 'help' for a list of commands.", 100))
 
 
             else:
                 print(fill("I'm not sure what you're trying to do. Type 'help' for a list of commands.", 100))
+                
 
 
 
