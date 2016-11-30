@@ -6,4 +6,4 @@ It is not finished by any means (lots of descriptions to be desired) but it is f
 
 Anyway, this project is my baby and I'm rather proud of it. I've been coding for 3 1/2 months by this point and I'm amazed at what I know now compared to when I started. Makes me excited for a lifetime of learning in this field!
 
-Thanks for reading (*embarrassed face*).
+Thanks for reading (:
