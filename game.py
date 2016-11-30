@@ -1352,6 +1352,7 @@ class PoolShark(Npc):
     def play(self):
         
         #Need to add sleeps
+        #This method is long as a mf
         
         print(fill("You attempt to swagger your way across the room to the pool shark,\
  but you end up tripping on your own feet and knocking somebody's beer over. That\
@@ -1365,9 +1366,10 @@ class PoolShark(Npc):
                 run = False
             else:
                 print(fill("The shark lays out the name of the game. You each\
- have three shots. If you get more in the pockets than him, you win\
+ have three shots. If you get more balls in the pockets than him, you win\
  all the money. If there is a tie, you get your money back. If he\
- gets more in than you, he wins your money.",100))
+ gets more in than you, he wins your money. You better not scratch that\
+ 8-ball....",100))
                 print()
                 run = False
         print("How much do you want to bet?")
@@ -1387,6 +1389,8 @@ class PoolShark(Npc):
                 run = False
         player_score = 0
         shark_score = 0
+        eight_ball = randint(1,6)
+        scratch = randint(6,20)
         break_ = randint(1,2)
         ball = randint(1, 2)
         if break_ == 1:
@@ -1406,49 +1410,80 @@ class PoolShark(Npc):
             type = "stripes"
             #sleep
             print()
-        if type == "solids":
-            ball_one = randint(1,3)
-            ball_two = randint(4,7)
-        elif type == "stripes":
-            ball_one = randint(9,11)
-            ball_two = randint(12,15)
         turn = 0
         run = True
         while run:
-            print("You have two good shots. Do you hit ball {} or\
+            if type == "solids":
+                ball_one = randint(1,3)
+                ball_two = randint(4,7)
+            elif type == "stripes":
+                ball_one = randint(9,11)
+                ball_two = randint(12,15)
+            if turn == 0:
+                print("You have two good shots. Do you hit ball {} or\
  {}?".format(ball_one, ball_two))
+            if turn == 1:
+                print("You see two more good shots. Should you hit the {} ball\
+ or the {} ball?".format(ball_one, ball_two))
+            if turn == 2:
+                print("Moment of truth! Pick a pocket for the 8-ball, a number\
+ between 1 and 6.")
             print()
-            try:
-                shot1 = int(input("> "))
-                if shot1 == ball_one:
-                    ball = ball_one
-                    run = False
-                elif shot1 == ball_two:
-                    ball = ball_two
+            if turn < 2:
+                try:
+                    shot = int(input("> "))
+                    if shot == ball_one:
+                        ball = ball_one
+                    elif shot == ball_two:
+                        ball = ball_two
+                    else:
+                        print("Please choose {} or {}.".format(ball_one, ball_two))
+                except:
+                    print("Please choose a number.")
+                print("You aim your sights at the {} ball,\
+ line up your shot, hit the cue ball, and...".format(ball))
+                miss = 1
+                hit = randint(1,3)
+                if hit == miss:
+                    print("Damn it, you missed!")
+                    print()
+                    turn += 1
+                else:
+                    print("You got it!")
+                    print()
+                    player_score += 1
+                    turn += 1
+            elif turn == 2:
+                try:
+                    eight_shot = int(input("> "))
+                    if eight_shot == eight_ball:
+                        print("You got the 8-ball in! Your mom would be so proud!")
+                    else:
+                        if scratch == 16:
+                            print("Oh lordy, it looks like you scratched. That's\
+ some unlucky business right there. Sorry bud, you automatically lose!")
+                        else:
+                            print("You missed! Ah well. Happens to the best of us.")
+                except:
+                    print("Please choose a number.")
+                if player_score == 1:
+                    print("Your turn is over! You had {} successful shot.".format(player_score))
                     run = False
                 else:
-                    print("Please choose {} or {}.".format(ball_one, ball_two))
-            except:
-                print("Please choose a number.")
-            print("You aim your sights at the {} ball,\
-    line up your shot, hit the cue ball, and...".format(ball))
-            miss = 1
-            hit = randint(1,3)
-            if hit == miss:
-                print("Damn it, you missed!")
-                print()
-                turn += 1
-            else:
-                print("You got it!")
-                print()
-                player_score += 1
-                turn += 1
+                    print("Your turn is over! You had {} successful shots.".format(player_score))
+                    run = False
             
         #One shot is fully outlined. I need a more streamlined way to
         #handle multiple shots and also handle the shark's shots.
         #Find a way to loop back through the above 3 times with intermittent
         #shark shots, or just loop through the above and then do the shark's
         #shots.
+        #
+        #Got it to go through in one loop! Now if I could only get the 8-ball
+        #message to work (GOT IT!), possibly get it so that numbers don't repeat themselves
+        #when you shoot (will probably just add ball_three, ball_four etc. for
+        #that), and get the shark's shots in there we should be good! And I
+        #have to figure out some money-distributing code of course.
             
         
         
