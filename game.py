@@ -2,42 +2,44 @@ from random import randint
 from textwrap import fill
 from time import sleep
 
-# A foreword - I try to have my code make sense to read through,
-# i.e. avoiding hardcore abbreviations and the like. It may
-# be a bit longer but it's far easier on human eyes. Some
-# things I've added comments to and others I've left alone.
+# A foreword - I try hard to write code that makes sense to
+# read through, i.e., avoiding hardcore abbreviations and
+# such. It may be a bit longer but I feel like it's easier
+# on human eyes and brains. Some of the things I've added
+# comments to (lots of 'em) and others I've left alone.
 # If there are any questions or comments, feel free to
 # e-mail me at alexandracecille1@gmail.com
 #
-# The super-long dictionaries I implemented are there so I could
+# The super-long dictionaries I implemented are so I could
 # focus on making the code work before I worried about descriptions
 # and the actual content. It felt really novel and smart to me at
-# the time. Now, I kind of feel silly if someone were to actually
-# look at them - they seem like big blocks of plain unnecessarity.
+# the time, but now I kind of feel silly. They seem like
+# big blocks of plain unnecessarity. But hey. It is what it is.
 #
-# Also, I feel like this is a good example of spaghetti code.
+# Oh, and I feel like this is a great example of spaghetti code.
 # I'm just too inexperienced at OOP to make it more efficient and
-# aesthetically pleasing.
+# aesthetically pleasing. To drive that point home:
 #
 # http://tinyurl.com/gsdvajz
 
 
 
-########## OBJECTIVES #############
+########## CURRENT OBJECTIVES #############
 # Add bar guy and girl quest
 # Add fancy woman quest
 # Add chef quest
 # Implement talk methods for everyone
-# Implement play method for pool shark
-# ^ Add sleep shit so it isn't as text-y
+# ^ Fix the pool shark's talk method
 # Figure out wtf you're going to do for the sewers
 # Finish descriptions
 # Fix buy and sell functions so that everyone doesn't return an error
 # Optimize lottery ticket
 # Optimize anything that requires additional input
 # ^ In that thread, optimize jukebox song selection
+# ^ Fuck and maybe the pool game too but I DON'T WANNA
 
-# BEFORE FINALIZATION:
+
+######### BEFORE FINALIZATION #############
 # Take out """ from sleep in user_input
 # (it's just annoying when I'm trying to fly
 # through the game to debug)
@@ -64,6 +66,7 @@ from time import sleep
 # Added old man quest
 # Fixed bug w/ dude if you have 2 tacos
 # Added 'play' and 'smoke' functions
+# SWEET JESUS FINISHED THE POOL GAME
 
 
 
@@ -167,7 +170,7 @@ items = {"hat":"A fancy-looking top hat. Maybe the rabbit costs extra...",
          "hobo":"A smelly man. You feel bad that he's sleeping behind a dumpster, but the\
  shank scares you a little bit.",
          "drunk":"An annoying frat boy that needs just one good punch to the kisser.",
-         "dude":"A clear OG.",
+         "dude":"A clear OG. You want to be like him with every fiber of your being.",
          "guy":"A desperate looking man sitting alone at the bar. He motions for you\
  to talk to him.",
          "girl":"A girl that sounds like she speaks her mind. Good for her.",
@@ -186,14 +189,10 @@ items = {"hat":"A fancy-looking top hat. Maybe the rabbit costs extra...",
          #so that the 'look' command works properly. The items above with 'None'
          #descriptions are also for the 'look' command
          
-         "north":"Check your map if you want to know what's north. Don't have one?\
- Uh-oh, you better get on it.",
-         "east":"Check your map if you want to know what's east. Don't have one?\
- Uh-oh, you better get on it.",
-         "west":"Check your map if you want to know what's west. Don't have one?\
- Uh-oh, you better get on it.",
-         "south":"Check your map if you want to know what's south. Don't have one?\
- Uh-oh, you better get on it.",
+         "north":"See, this is a good reason to have a map. Go find one.",
+         "east":"See, this is a good reason to have a map. Go find one.",
+         "west":"See, this is a good reason to have a map. Go find one.",
+         "south":"See, this is a good reason to have a map. Go find one.",
          "box office":"Just a fancy box office.",
          "attendant":"A clearly disgruntled employee.",
          "bartender":"A chick with full sleeves on each arm. She doesn't look like\
@@ -682,7 +681,8 @@ class Misc:
         print("{} added to inventory.".format(self.name.capitalize()))
         item = real_item[self.name]
         player.inventory.append(item)
-        scene.room_items.remove(item.name)
+        if item.name in scene.room_items:
+            scene.room_items.remove(item.name)
         
 class Map(Misc):
     def __init__(self):
@@ -716,7 +716,7 @@ class Map(Misc):
             
     def take(self):
         print(fill("Come on, as nice as that guy was? You just want to\
- steal the map? Is a taco too much to ask for?", 100))
+ steal the map? Is a taco too much to ask for? Kids these days.", 100))
 
 class LotteryTicket(Misc):
     def __init__(self):
@@ -937,6 +937,7 @@ class UsedGum(Misc):
         
     def take(self, scene):
         print("As gross as it seems, you take the ABC gum. It might come in handy.")
+        print()
         print("Used gum added to inventory.")
         player.inventory.append(UsedGum())
         
@@ -997,6 +998,7 @@ class Purse(Misc):
 
     def look(self):
         print(fill(items[self.name], 100))
+        print()
         print("Contains:")
         for item in self.inventory:
             item = real_item[item]
@@ -1119,9 +1121,8 @@ class Attendant(Npc):
         if random == 1:
             print("You ask the attendant why he seems to hate you so much.")
             print("""He blushes. "I just have to act like a snob or I lose my job." """)
-            print("Well, that's surprising. You ask him whether he even likes his job.")
-            print(""""What do you think?" """)
-            print("Fair point.")
+            print(fill("Well, that's surprising. He rises up a few notches in your eyes. Never\
+ judge a book by it's cover, kids.",100))
         if random == 2:
             print(""""Oh, what do you want?" the attendant asks.""")
             print(fill("You balk at him. How can he be so rude? Maybe someone pissed in his\
@@ -1129,7 +1130,7 @@ class Attendant(Npc):
  tomorrow. You ask him what his deal is.", 100))
             print(fill(""""I really like that guy standing on W 8th, but he acts like\
  I don't exist." """, 100))
-            print(fill("Not what you were expecting. You tell him there's always a chance\
+            print(fill("Not what you were expecting. You tell him there's a chance\
  and walk away awkwardly.",100))
         if random == 3:
             print("You walk up to the attendant but his glare sends you walking the other way.")
@@ -1243,7 +1244,7 @@ class StreetDude(Npc):
                     self.visited = 1
                     break
             if not found:
-                print(fill("You approach home boy. He grins at you from underneath\
+                print(fill("You approach homeboy. He grins at you from underneath\
  a pair of shades, one gold incisor glinting in the light.",100))
                 print(fill(""""Hey you," he says, "how's about getting me a taco? I'll make it\
  worth your while! I used to get lost on this block all the time, but this kickass\
@@ -1347,16 +1348,18 @@ class PoolShark(Npc):
         self.name = "pool shark"
         self.money = 300
 
-    #Must implement talk method
+    def talk(self):
+        print("I'm lazy. He wants to play pool.")
     
     def play(self):
         
         #Need to add sleeps
-        #This method is long as a mf
+        #This method is long as a mf and when the player gets in it,
+        #THERE'S NO WAY OUT
+        #Don't even care about fixing it right now tbh.
         
         print(fill("You attempt to swagger your way across the room to the pool shark,\
- but you end up tripping on your own feet and knocking somebody's beer over. That\
- was impressive.",100))
+ but you trip on your own feet and knock somebody's beer over. Impressive, you are.",100))
         print("Have you played this guy before?")
         print()
         run = True
@@ -1364,67 +1367,83 @@ class PoolShark(Npc):
             play = input("> ").lower()
             if play == "yes" or play == "y":
                 run = False
-            else:
+            elif play == "no" or play == "n":
                 print(fill("The shark lays out the name of the game. You each\
- have three shots. If you get more balls in the pockets than him, you win\
+ have three balls to hit. If you can sink more of 'em in the pockets than him, you win\
  all the money. If there is a tie, you get your money back. If he\
  gets more in than you, he wins your money. You better not scratch that\
- 8-ball....",100))
+ 8-ball at the end...",100))
                 print()
                 run = False
+            else:
+                print("Sorry, you wanted to play him. He's not letting you go now. Yes or no?")
+                print()
         print("How much do you want to bet?")
         print()
         run = True
         while run:
-            bet = float(input("> "))
-            if bet > player.money:
-                print("You can't afford to make that bet.")
+            try:
+                bet = float(input("> "))
+                if bet > player.money:
+                    print("You can't afford to make that bet.")
+                    print()
+                elif bet > self.money:
+                    print("The pool shark can't afford a bet that high.")
+                else:
+                    print("You make a bet of ${:.2f}.".format(bet))
+                    sleep(1)
+                    print()
+                    run = False
+            except:
+                print("Type a number in there, dunderhead.")
                 print()
-            elif bet > self.money:
-                print("The pool shark can't afford a bet that high.")
-            else:
-                print("You make a bet of ${:.2f}.".format(bet))
-                #sleep
-                print()
-                run = False
         player_score = 0
         shark_score = 0
         eight_ball = randint(1,6)
+        peight_ball = randint(1,6)
         scratch = randint(6,20)
         break_ = randint(1,2)
         ball = randint(1, 2)
         if break_ == 1:
             print("You grab a cue and break.")
-            #sleep
+            sleep(0.6)
         elif break_ == 2:
             print("The shark grabs a cue and breaks.")
-            #sleep
-        print()
+            sleep(0.6)
         if ball == 1:
             print("Looks like you're solids!")
             type = "solids"
-            #sleep
+            sleep(1)
             print()
         elif ball == 2:
             print("Looks like you're stripes!")
             type = "stripes"
-            #sleep
+            sleep(1)
             print()
+        if type == "solids":
+            ball_one = randint(1,2)
+            ball_two = randint(5,6)
+            ball_three = randint(3,4)
+            ball_four = 7
+        elif type == "stripes":
+            ball_one = randint(9,10)
+            ball_two = randint(13,14)
+            ball_three = randint(11,12)
+            ball_four = 15
+        
+        #Overkill, but takes care of the problem with
+        #balls repeating themselves (even if you've already
+        #hit them in). Whoopsie!
+        
         turn = 0
         run = True
         while run:
-            if type == "solids":
-                ball_one = randint(1,3)
-                ball_two = randint(4,7)
-            elif type == "stripes":
-                ball_one = randint(9,11)
-                ball_two = randint(12,15)
             if turn == 0:
                 print("You have two good shots. Do you hit ball {} or\
  {}?".format(ball_one, ball_two))
             if turn == 1:
                 print("You see two more good shots. Should you hit the {} ball\
- or the {} ball?".format(ball_one, ball_two))
+ or the {} ball?".format(ball_three, ball_four))
             if turn == 2:
                 print("Moment of truth! Pick a pocket for the 8-ball, a number\
  between 1 and 6.")
@@ -1436,57 +1455,132 @@ class PoolShark(Npc):
                         ball = ball_one
                     elif shot == ball_two:
                         ball = ball_two
+                    elif shot == ball_three:
+                        ball = ball_three
+                    elif shot == ball_four:
+                        ball = ball_four
+                        
+                    #It's midnight and I can't remember why this is here.
+                    #But it works.
+                    
                     else:
                         print("Please choose {} or {}.".format(ball_one, ball_two))
+                        continue
                 except:
                     print("Please choose a number.")
+                    continue
                 print("You aim your sights at the {} ball,\
  line up your shot, hit the cue ball, and...".format(ball))
-                miss = 1
-                hit = randint(1,3)
-                if hit == miss:
+                sleep(1)
+                miss = randint(1,4)
+                if miss == 1:
                     print("Damn it, you missed!")
+                    sleep(0.5)
                     print()
                     turn += 1
                 else:
                     print("You got it!")
+                    sleep(0.5)
                     print()
                     player_score += 1
                     turn += 1
+                print("Now it's the pool shark's turn.")
+                if type == "solids":
+                    ball_one = randint(9,15)
+                elif type == "stripes":
+                    ball_one = randint(1,7)
+                print("He attempts to hit the {} ball in...".format(ball_one))
+                sleep(1)
+                
+                #This REALLY pisses me off, because even though I set the odds of
+                #him hitting the same ball twice as high as I could, it STILL
+                #happens. Whatever. Maybe no one will notice it. >_>
+                #This method is complicated enough without me fixing that crap.
+                
+                pmiss = randint(1,4)
+                if pmiss == 1:
+                    print("Oh, he missed it!")
+                    sleep(0.6)
+                    print()
+                else:
+                    print("He sunk it!")
+                    sleep(0.6)
+                    print()
+                    shark_score += 1
             elif turn == 2:
                 try:
                     eight_shot = int(input("> "))
                     if eight_shot == eight_ball:
                         print("You got the 8-ball in! Your mom would be so proud!")
+                        sleep(0.6)
+                        print()
+                        player_score += 1
                     else:
-                        if scratch == 16:
+                        if scratch == 6:
                             print("Oh lordy, it looks like you scratched. That's\
  some unlucky business right there. Sorry bud, you automatically lose!")
+                            print("-${:.2f}".format(bet))
+                            player.money -= bet
+                            self.money += bet
+                            break
                         else:
                             print("You missed! Ah well. Happens to the best of us.")
+                            sleep(0.6)
+                            print()
                 except:
                     print("Please choose a number.")
+                print("The shark attempts to hit his 8-ball shot...")
+                sleep(1)
+                if peight_ball == 1:
+                    print("He got it! What a lucky shot!")
+                    sleep(0.6)
+                    print()
+                    shark_score += 1
+                elif peight_ball == 2:
+                    print("He scratched! Would you look at that, you won!")
+                    print("+${:.2f}".format(bet))
+                    player.money += bet
+                    self.money -= bet
+                    break
+                else:
+                    print("Whoopsie, he huffed it.")
+                    sleep(0.6)
+                    print()
                 if player_score == 1:
-                    print("Your turn is over! You had {} successful shot.".format(player_score))
+                    print("The game is over! You had {} successful shot.".format(player_score))
+                else:
+                    print("The game is over! You had {} successful shots.".format(player_score))
+                if shark_score == 1:
+                    print("The pool shark had {} successful shot.".format(shark_score))
+                else:
+                    print("The pool shark had {} successful shots.".format(shark_score))
+                sleep(1)
+                if player_score > shark_score:
+                    print("Congratulations, you won!")
+                    sleep(0.8)
+                    print("+${:.2f}".format(bet))
+                    player.money += bet
+                    self.money -= bet
+                    run = False
+                elif player_score == shark_score:
+                    print("It was a tie!")
+                    sleep(0.8)
+                    print("The pool shark hands you your money back.")
                     run = False
                 else:
-                    print("Your turn is over! You had {} successful shots.".format(player_score))
+                    print("Ouch, sorry, you lost!")
+                    sleep(0.8)
+                    print("-${:.2f}".format(bet))
+                    player.money -= bet
+                    self.money += bet
                     run = False
             
-        #One shot is fully outlined. I need a more streamlined way to
-        #handle multiple shots and also handle the shark's shots.
-        #Find a way to loop back through the above 3 times with intermittent
-        #shark shots, or just loop through the above and then do the shark's
-        #shots.
-        #
-        #Got it to go through in one loop! Now if I could only get the 8-ball
-        #message to work (GOT IT!), possibly get it so that numbers don't repeat themselves
-        #when you shoot (will probably just add ball_three, ball_four etc. for
-        #that), and get the shark's shots in there we should be good! And I
-        #have to figure out some money-distributing code of course.
+
+        #I. Cannot. Tell you. How many times. I have played this
+        #billiards game. I can't. Do it. Anymore.
             
-        
-        
+            
+            
 
     def buy(self):
         print("He doesn't have anything to sell you.")
@@ -2135,6 +2229,7 @@ class Alleyway(Scene):
                 shank = Shank()
                 player.inventory.append(shoes)
                 player.inventory.append(shank)
+                self.room_items.remove("shank")
                 self.room_enemies.remove("hobo")
                 map_ = Map_("alleyway")
                 game = Engine(map_)
@@ -2751,6 +2846,13 @@ class UserInput():
                         if item.name == noun:
                             found = True
                             print("You already have '{}'.".format(noun))
+                        elif item.name == "purse":
+                            purse = real_item["purse"]
+                            if noun in purse.inventory:
+                                found = True
+                                noun = real_item[noun]
+                                purse.inventory.remove(noun.name)
+                                noun.take(self.scene)
                     if noun in self.scene.room_items:
                         found = True
                         noun = real_item[noun]
@@ -2761,10 +2863,12 @@ class UserInput():
                         print("You can't take '{}'.".format(noun))
                     else:
                         if not found:
-                            #Pretty sure I don't need both of those but I'm
+                            
+                            #Pretty sure I don't need both of those conditions but I'm
                             #scared of what might happen if I remove them.
-                            #The take function was carefull crafted.
-                            #So, else: if not found!
+                            #This take function was carefully crafted.
+                            #So, "else: if not found" it is!
+                            
                             print("I don't see '{}' here.".format(noun))
                 else:
                     print("Take what?")
@@ -2775,6 +2879,11 @@ class UserInput():
                     if "piss puddle" in self.scene.room_items:
                         noun = real_item[noun]
                         noun.drink()
+                        
+                        #Just waiting for somebody to do this and tell me about it *evil grin*
+                        #It's only in its own branch up there because it's the only thing that
+                        #can be drunk (drank?) straight from the environment.
+                        
                     else:
                         found = False
                         for item in player.inventory:
@@ -3039,6 +3148,8 @@ class UserInput():
                     print("Play what? You can't just start playing with yourself.")
                     
 
+            #NOOOOOO MOVE THIS SHIT TO THE PLAY() METHOD IN THE JUKEBOXXXX
+            
             elif (verb == "1" or
             verb == "2" or
             verb == "3" or
