@@ -5,7 +5,7 @@ from time import sleep
 # A foreword - I try hard to write code that makes sense to
 # read through, i.e., avoiding hardcore abbreviations and
 # such. It may be a bit longer but I feel like it's easier
-# on human eyes and brains. Some of the things I've added
+# on human eyes and brains. Some of the code I've added
 # comments to (lots of 'em) and others I've left alone.
 # If there are any questions or comments, feel free to
 # e-mail me at alexandracecille1@gmail.com
