@@ -1,6 +1,6 @@
 # The Streets
 
-My favorite creation to date. A full-fledged text adventure with several bells and whistles, much more complex than my Prison Text Adventure (with the caveat of being much more complicated and requiring much more time. Not to mention it's over 3,000 lines longer!). I also hope that it's more entertaining as it is 99% original (shout out to 'Learning Python the Hard Way' for teaching me to make a game engine).
+My favorite creation to date. A full-fledged text adventure with several bells and whistles, much more complex than my Prison Text Adventure (with the caveat of being much more complicated and requiring much more time. Not to mention it's over 3,000 lines longer! Which, granted, is not always a good thing). I also hope that it's more entertaining as it is 99% original (shout out to 'Learning Python the Hard Way' for teaching me to make a game engine).
 
 It is not finished by any means (lots of descriptions to be desired) but it is fully functional. However, there may be several bugs. I think I squashed most of them, but that's from a developer's point of view (which is probably super skewed).
 
