@@ -1,4 +1,6 @@
-import replit
+#import replit
+#Only works on repl.it
+
 from random import randint
 from textwrap import fill
 from time import sleep
@@ -3242,8 +3244,11 @@ class UserInput():
                                     noun.drink()
                                     player.inventory.remove(item)
                                     if player.drank == 6:
-                                        replit.clear()
-                                        print(fill("You down your sixth drink. Everything you've done\
+						
+                                        #replit.clear()
+                                        #A cool little thing on repl.it where it clears the screen
+					
+					print(fill("You down your sixth drink. Everything you've done\
  up to this point becomes hazy. Maybe you should reconsider some life choices.",100))
                                 else:
                                     print("You can't drink '{}'.".format(noun))
