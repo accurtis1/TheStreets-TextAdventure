@@ -28,19 +28,19 @@ from time import sleep
 
 
 ########## CURRENT OBJECTIVES #############
-# Add fancy woman quest
-# Add chef quest
-# Implement talk methods for everyone
 # Figure out wtf you're going to do for the sewers
-# Finish descriptions
+# Hooded figure, gives advice? or stuff?
+# Find a use for tampon?
+# Update github
+# Fix 'play in waterfall' and figure out wtf is going on
 # Add sleeps to guy/girl conversation
+# Add sleeps to errythang
 
 
 ######### BEFORE FINALIZATION #############
 # Take out """ from sleep in user_input
 # (it's just annoying when I'm trying to fly
 # through the game to debug)
-# Set player money back to 0
 # Clear player inventory, set money and class to 0
 
 
@@ -68,7 +68,10 @@ from time import sleep
 # Added fighter quest
 # Fixed it so you can die (Muahahaha)
 # Fixed buy/sell so it removes item from NPC inventory
-# Fixed pool game from playing if you input something stupid
+# Fixed pool game from continuing if you input something stupid
+# FINISHED DESCRIPTIONS <3
+# Added fancy woman quest
+# Added chef quest
 
 
 
@@ -153,6 +156,7 @@ items = {"hat":"A fancy-looking top hat. Maybe the rabbit costs extra...",
          "lipstick":"Some color named 'Kiss me dead.' That's disturbing.",
          "lighter":"A lighter with 'Bob Marley lives' scrawled on it. Pretty sure he doesn't.",
          "used napkin":"A napkin that likely contains a booger or two.",
+         "napkin":None,
          "tampon":"Thank god it's not used.",
          "bruschetta":"Grilled bread with garlic, tomatoes, olive oil, and other ingredients.",
          "crostini":"A mini-toast sort of dish.",
@@ -1499,7 +1503,7 @@ class PoolShark(Npc):
         self.money = 300
 
     def talk(self):
-        print("I'm lazy. He wants to play pool.")
+        print("This guy doesn't want to talk, he wants to play.")
     
     def play(self):
         
@@ -1766,9 +1770,36 @@ class Cashier(Npc):
 class FancyWoman(Npc):
     def __init__(self):
         self.name = "woman"
-        self.money = randint(30,50)
+        self.money = randint(40,50)
+        self.requirement = "crostini"
+        self.talked = False
     
-    #Must implement talk method
+    def talk(self):
+        if not self.talked:
+            self.talked = True
+            print(fill("You approach the fancy woman. She doesn't seem very\
+ fancy close up.",100))
+            print(fill(""""You there," she says, pointing at you. "Bring\
+ me some toast." You inform her that you don't work here. "Oh, is that right?\
+ Well then, I'll make it worth your while. Now bring me some toast!" """,100))
+            print(""""Fine," you mumble. Old bag.""")
+        else:
+            found = False
+            for item in player.inventory:
+                if item.name == self.requirement:
+                    found = True
+                    print(fill(""""Finally!" she bellows. "Thank you!" She cuts up\
+ the toast like it owes her money and shoves half of it in her mouth. You remind\
+ her of your reward. "Oh, right, here." """,100))
+                    print()
+                    print("+{:.2f}".format(self.money))
+                    print("Pin added to inventory.")
+                    player.money += self.money
+                    player.inventory.append(Pin())
+                    player.inventory.remove(item)
+            if not found:
+                print(fill("The woman taps her knife on her plate impatiently. Kind\
+ of menacingly. You don't want to cross her. Better get that toast...",100))
     
     def buy(self):
         print("You really think she needs your money?")
@@ -1782,8 +1813,37 @@ class Chef(Npc):
         self.name = "chef"
         self.inventory = ["bruschetta", "crostini",
         "insalata caprese"]
+        self.talked = False
+        self.requirement = "used napkin"
       
-    #Must implement talk method
+    def talk(self):
+        if not self.talked:
+            self.talked = True
+            print(fill("You step into the kitchen and approach the chef. He seems very\
+ flustered. He's sweating over two pots on the stove, zipping through vegetables\
+ on the cutting board, and checking on bread in the oven. Amazing.",100))
+            print(""""Hello?" """)
+            print(fill(""""Oh hi there!" he says, wringing out his hands on his apron to shake\
+ yours. "So nice to meet you. I saw you come in the door, and you looked like someone\
+ who could help me. I have an absolutely huge snot rocket I need to get out, but there's\
+ nothing here to use!" What a dilemma. Looks like it's up to you to save the day...""",100))
+        else:
+            found = False
+            for item in player.inventory:
+                if item.name == self.requirement:
+                    found = True
+                    print(fill("You hand over the (used) napkin to the chef. He doesn't seem to\
+ notice the spotted stains. Oh well.",100))
+                    print(fill(""""Oh, thank you so much!" he says, blowing his nose into the tissue.\
+ "I feel so much better!" He grins at you and you notice a booger hanging from his nostril. What\
+ he doesn't know can't hurt him. "Here," he says, "take this. It's my finest creation." """,100))
+                    print()
+                    print("Steamed lobster added to inventory.")
+                    player.inventory.append(SteamedLobster())
+                    player.inventory.remove(item)
+            if not found:
+                print("You can practically see the snot falling in the food. You'd better hurry.")
+                
     
     def buy(self):
         print("This is what the chef has available:")
@@ -1850,6 +1910,7 @@ class Fighter(Npc):
 
 #                    -----======(   ITEMS   )======-----
 
+
 real_item = {"attendant":Attendant(),
              "hat":Hat(),
              "scarf":Scarf(),
@@ -1906,6 +1967,7 @@ real_item = {"attendant":Attendant(),
              "lipstick":Lipstick(),
              "lighter":Lighter(),
              "used napkin":UsedNapkin(),
+             "napkin":UsedNapkin(),
              "tampon":Tampon(),
              "bruschetta":Bruschetta(),
              "crostini":Crostini(),
@@ -1945,7 +2007,7 @@ class Player:
     def __init__(self):
         self.hp = 100
         self.money = 100
-        self.classy = 0
+        self.classy = 50
         self.inventory = [Fists(), Lipstick(), BoxingGloves(), LotteryTicket()]
         self.drank = 0
 
@@ -2097,9 +2159,9 @@ class BoxOffice(Scene):
  like *that*. Besides, you don't have enough money. It's $100 for a ticket." """, 100))
             print("Defeated, you turn away.")
             print()
-            print(fill("You are facing the box office.\
- The attendant looks at you with contempt in his eyes.\
- He will not let you in unless you have a class of 100 and $100.", 100))
+            print(fill("You are facing the box office. The attendant looks at you with contempt\
+ in his eyes. He will not let you in unless you have a class level of 100 and $100. The only\
+ way to go is north toward W 8th Ave.", 100))
             print()
             print("Type 'help' for a list of commands.")
             value = UserInput(box_office)
@@ -2109,7 +2171,8 @@ class BoxOffice(Scene):
 
         if not self.fresh_arrival:
             print(fill("You are facing the box office. The attendant looks at you with contempt\
- in his eyes. He will not let you in unless you have a class level of 100 and $100.", 100))
+ in his eyes. He will not let you in unless you have a class level of 100 and $100. The only\
+ way to go is north toward W 8th Ave.", 100))
             value = UserInput(box_office)
             direction = value.user_input()
             if direction == "north":
@@ -2785,8 +2848,8 @@ class BreakRoom(Scene):
  how the employees are able to tolerate it.", 100))
             print()
             print(fill("You see some chairs around a table with a purse sitting atop it.\
- There is a clock and a calendar on the wall. Not much else. To your west is back to the\
- clothes store.", 100))
+ Maybe there's some stuff in it. There is also a clock and a calendar on the wall. Not much else.\
+ To your west is back to the clothes store.", 100))
             value = UserInput(break_room)
             direction = value.user_input()
             if direction == "west":
@@ -2801,8 +2864,8 @@ class BreakRoom(Scene):
  and a calendar on the wall. Not much else. To your west is back to the clothes store.",100))
             if not found:
                 print(fill("You see some chairs around a table with a purse sitting atop it.\
-     There is a clock and a calendar on the wall. Not much else. To your west is back to the\
-     clothes store.",100))
+ Maybe there's some stuff in it. There is also a clock and a calendar on the wall. Not much else.\
+ To your west is back to the clothes store.",100))
             value = UserInput(break_room)
             direction = value.user_input()
             if direction == "west":
@@ -2814,7 +2877,7 @@ class Restaurant(Scene):
     room_objects = ["waterfall"]
     room_items = ["piano", "bruschetta", "crostini", "insalata caprese",
     "pin"]
-    room_characters = ["fancy woman", "chef"]
+    room_characters = ["woman", "chef"]
     room_enemies = []
 
     def __init__(self):
@@ -2835,7 +2898,7 @@ class Restaurant(Scene):
                 print(fill("You are standing in a fancy restaurant. On the far side\
  you can see a waterfall and a grand piano. Lovely. There's a fancy woman at the table\
  nearest you who must think you're her server. She's calling you over. If you'd like,\
- you can buy a delicacy from the chef.",100))
+ you can buy a delicacy from the chef. In fact, it looks like he wants to talk to you too.",100))
             else:
                 self.fresh_arrival = False
                 print(fill("Uh-oh. It looks like you're not fancy enough to get in here.\
@@ -2854,7 +2917,7 @@ class Restaurant(Scene):
                 print(fill("You are standing in a fancy restaurant. On the far side\
  you can see a waterfall and a grand piano. Lovely. There's a fancy woman at the table\
  nearest you who must think you're her server. She's calling you over. If you'd like,\
- you can buy a delicacy from the chef.", 100))
+ you can buy a delicacy from the chef. In fact, it looks like he wants to talk to you too.", 100))
             else:
                 print(fill("Uh-oh. It looks like you're not fancy enough to get in here.\
  The maitre d' kicks you out. Try again when you're a little classier.",100))
@@ -2894,19 +2957,24 @@ class BoxingArena(Scene):
     def enter(self):
         if self.fresh_arrival:
             self.fresh_arrival = False
-            print(fill("An intimidating boxing arena. Something nice and\
- descriptive will go here.", 100))
+            print(fill("An intimidating boxing arena. You are acutely aware\
+ of your lack of buff. Maybe fighting that boxer will put some meat on your\
+ bones...", 100))
             print()
-            print(fill("There's a fighter and a boxer here. You can fight\
- the boxer and win some money. South: 45th St.", 100))
+            print(fill("You are standing in the corner of the boxing arena.\
+ near the door is a fighter holding his jaw. He spots you and motions for you\
+ to come talk to him. There's a boxer ready to fight in the ring. Maybe you could\
+ make some quick cash? To the south is back toward 45th St.", 100))
             value = UserInput(boxing_arena)
             direction = value.user_input()
             if direction == "south":
                 return "street3"
             
         if not self.fresh_arrival:
-            print(fill("There's a fighter and a boxer here. You can fight\
- the boxer and win some money. South: 45th St.", 100))
+            print(fill("You are standing in the corner of the boxing arena.\
+ near the door is a fighter holding his jaw. He spots you and motions for you\
+ to come talk to him. There's a boxer ready to fight in the ring. Maybe you could\
+ make some quick cash? To the south is back toward 45th St.", 100))
             value = UserInput(boxing_arena)
             direction = value.user_input()
             if direction == "south":
@@ -3024,7 +3092,7 @@ class Map_():
 
 
 
-#                    -----======(   GAME   )======-----
+#                    -----======(   USER INPUT   )======-----
 
 
 box_office = BoxOffice()
@@ -3246,9 +3314,9 @@ class UserInput():
                                     if player.drank == 6:
 						
                                         #replit.clear()
-                                        #A cool little thing on repl.it where it clears the screen
+					#A cute lil thing that clears the screen
 					
-					print(fill("You down your sixth drink. Everything you've done\
+                                        print(fill("You down your sixth drink. Everything you've done\
  up to this point becomes hazy. Maybe you should reconsider some life choices.",100))
                                 else:
                                     print("You can't drink '{}'.".format(noun))
