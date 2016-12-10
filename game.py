@@ -1,6 +1,5 @@
 #import replit
 #Only works on repl.it
-
 from random import randint
 from textwrap import fill
 from time import sleep
@@ -28,9 +27,6 @@ from time import sleep
 
 
 ########## CURRENT OBJECTIVES #############
-# Figure out wtf you're going to do for the sewers
-# Hooded figure, gives advice? or stuff?
-# Find a use for tampon?
 # Update github
 # Fix 'play in waterfall' and figure out wtf is going on
 # Add sleeps to guy/girl conversation
@@ -2071,7 +2067,8 @@ look_text = {"box_office":"You look around the box office. There is an attendant
  a hobo, his pillow, his blanket, and a gleaming suitcase. A nearby streetlight flickers and then burns out. Everything\
  goes dark and it reeks of pee. The only way to go is back south the way you came, to W 8th Ave.",
               
-              "manhole":"This part of the game is not fully developed yet.",
+              "manhole":"A filthy section of sewer. It's too dark to see clearly, but you think you can make out\
+ a hooded figure standing in the distance.",
               
               "bar":"A country bar where everyone is having a darn tootin' good time. There's a jukebox with all the\
  down home hits, a twitching man at the bar, a gorgeous girl at a table with her friends, several drunks, and an old\
@@ -2591,7 +2588,13 @@ class Manhole(Scene):
             for item in player.inventory:
                 if item.name == self.requirement:
                     found = True
-                    print("You can see down here!")
+                    print(fill("""You flick the lighter on and, by its dim glow, you can\
+ see a hooded figure standing a ways down the sewer line. "Hello?" you call.""",100))
+                    print(fill(""""Hello, hello, hello," it bellows. "So nice of you\
+ to join me down here. I will tell you what you seek. If it is money you need, there\
+ is always an opponent with more on the northmost edge. If it is class you desire,\
+ there are a multitude of clothing options, only you must have your riches about you." """,100))
+                    print("That was it? What a waste of time...")
             if not found:
                 print(fill("You can't see anything down here; it's pitch black. Looks\
  like you'll have to find something to provide a little light. The only way to go is\
@@ -2606,7 +2609,13 @@ class Manhole(Scene):
             for item in player.inventory:
                 if item.name == self.requirement:
                     found = True
-                    print("You can see down here!")
+                    print(fill("""You flick the lighter on and, by its dim glow, you can\
+ see a hooded figure standing a ways down the sewer line. "Hello?" you call.""",100))
+                    print(fill(""""Hello, hello, hello," it bellows. "So nice of you\
+ to join me down here. I will tell you what you seek. If it is money you need, there\
+ is always an opponent with more on the northmost edge. If it is class you desire,\
+ there are a multitude of clothing options, only you must have your riches about you." """,100))
+                    print("That was it? What a waste of time...")
             if not found:
                 print(fill("You can't see anything down here; it's pitch black. Looks\
  like you'll have to find something to provide a little light. The only way to go is\
@@ -3312,10 +3321,8 @@ class UserInput():
                                     noun.drink()
                                     player.inventory.remove(item)
                                     if player.drank == 6:
-						
                                         #replit.clear()
-					#A cute lil thing that clears the screen
-					
+					#Thing on repl.it that clears the screen
                                         print(fill("You down your sixth drink. Everything you've done\
  up to this point becomes hazy. Maybe you should reconsider some life choices.",100))
                                 else:
