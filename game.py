@@ -28,7 +28,9 @@ from time import sleep
 
 ########## CURRENT OBJECTIVES #############
 # Update github
+# Implement 'hint' function
 # Add sleeps to errythang
+# THE SUITCASE IS GONE HOW IS IT GONE BRING IT BACK
 
 
 ######### BEFORE FINALIZATION #############
@@ -964,7 +966,7 @@ class Dumpster(Misc):
         self.name = "dumpster"
         
     def look(self):
-        money = randint(1,5)
+        money = randint(5,10)
         print(fill(items[self.name], 100))
         print()
         print(fill("After a short inspection you find ${:.2f}, a wad of used chewing gum, and a half-eaten apple.\
@@ -972,6 +974,7 @@ class Dumpster(Misc):
         print()
         print("You pocket the money and ponder taking the other items.")
         print("${:.2f} added.".format(money))
+        player.money += money
 
     def take(self, scene):
         print(fill("C'mon, really? Go ahead, try to move it, nonetheless carry it with you.",100))
@@ -3602,8 +3605,26 @@ class UserInput():
                     print("Play what? You can't just start playing with yourself.")
                     
                     
-            
-
+            elif verb == "hint":
+                
+                #I feel like this would be better if it were placed above with the single-verb
+                #commands, but it would take up so much space that I'm just gonna
+                #hide it down here. Thanks to a user on twocansandstring.com for the
+                #idea!!!
+                
+                hint = randint(1,5)
+                if hint == 1:
+                    print("The boxer never dies, he always comes back for more!")
+                elif hint == 2:
+                    print("Buy the dude on W 8th St a taco. Seriously. You'll thank me.")
+                elif hint == 3:
+                    print("There's lots to do in the alleyway and the bar!")
+                elif hint == 4:
+                    print("If you're looking for a combination, it might be written down somewhere...")
+                elif hint == 5:
+                    print("Stuck? Try talking to people.")
+                    
+                #I'll come up with more hints eventually, I'm sure.
 
 
             else:
