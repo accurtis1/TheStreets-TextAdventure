@@ -28,8 +28,6 @@ from time import sleep
 
 ########## CURRENT OBJECTIVES #############
 # Update github
-# Fix 'play in waterfall' and figure out wtf is going on
-# Add sleeps to guy/girl conversation
 # Add sleeps to errythang
 
 
@@ -1503,7 +1501,6 @@ class PoolShark(Npc):
     
     def play(self):
         
-        #Need to add sleeps
         #This method is long as a mf and when the player gets in it,
         #THERE'S NO WAY OUT
         #Don't even care about fixing it right now tbh.
@@ -2002,8 +1999,8 @@ real_item = {"attendant":Attendant(),
 class Player:
     def __init__(self):
         self.hp = 100
-        self.money = 100
-        self.classy = 50
+        self.money = 0
+        self.classy = 0
         self.inventory = [Fists(), Lipstick(), BoxingGloves(), LotteryTicket()]
         self.drank = 0
 
@@ -2150,11 +2147,14 @@ class BoxOffice(Scene):
             print(fill("You stand in front of the box office at the Majestic\
  theater. All you want in this world right now is to buy a ticket to The\
  Phantom of the Opera.", 100))
+            sleep(0.7)
             print("The attendant looks at you with disdain.")
             print(fill(""""I'm sorry, but you're going to have to clean\
  up your act if you want in. I'm  not selling you a ticket looking\
  like *that*. Besides, you don't have enough money. It's $100 for a ticket." """, 100))
+            sleep(1)
             print("Defeated, you turn away.")
+            sleep(0.5)
             print()
             print(fill("You are facing the box office. The attendant looks at you with contempt\
  in his eyes. He will not let you in unless you have a class level of 100 and $100. The only\
@@ -2194,9 +2194,10 @@ class Street1(Scene):
     def enter(self):
         if self.fresh_arrival:
             self.fresh_arrival = False
-            print(fill("You make your way to W 8th Ave. A shady-looking dude is standing on\
+            print(fill("You make your way north. A shady-looking dude is standing on\
  the sidewalk, staring at the sky. He spies you and grins. It looks like he wants to talk to\
  you.",100))
+            sleep(0.7)
             print()
             print(fill("You are standing in the middle of W 8th Ave. The smell of the street makes\
  you want to vomit. A cool dude leans against a street light, teeth glinting. His dark\
@@ -2246,9 +2247,10 @@ class Street2(Scene):
     def enter(self):
         if self.fresh_arrival:
             self.fresh_arrival = False
-            print(fill("You arrive at E 8th St. It reminds you of a dream you had\
- as a kid, one where you ran into the street to grab a briefcase and nearly got run over\
+            print(fill("You move east. This street reminds you of a dream you had\
+ as a kid. You were running after a briefcase while being chased\
  by a car shaped like a dog. You were an odd kid.", 100))
+            sleep(0.7)
             print()
             print(fill("You are standing at the corner of E 8th St. Nothing here but\
  the sound of water trickling into the sewer grates. To your north is 45th St. In the\
@@ -2300,9 +2302,10 @@ class Street3(Scene):
     def enter(self):
         if self.fresh_arrival:
             self.fresh_arrival = False
-            print(fill("You arrive at 45th St. A man is standing on the street\
+            print(fill("You make your way north. A man is standing on the street\
  corner, playing guitar and singing. It looks like he's in his underwear. Doesn't\
  this guy belong in Times Square?", 100))
+            sleep(0.7)
             print()
             print(fill("You are standing on 45th St. There is nothing much to do here.\
  To your north is a kickass boxing arena. To your east, a snooty-looking clothing store.\
@@ -2357,9 +2360,10 @@ class StreetVendor(Scene):
             print(fill("You move to the west and arrive at the street vendor\
  area. Immediately you are bombarded by middle-aged men trying to sell you\
  selfie sticks. Brushing them away, you approach one of the tables.", 100))
+            sleep(0.7)
             print()
             print(fill("You're standing in front of a street vendor. You can\
- buy food, weapons, and accessories from him. To your east is E 8th St.", 100))
+ buy certain items from him. Try 'buy from vendor.' To your east is E 8th St.", 100))
             value = UserInput(street_vendor)
             direction = value.user_input()
             if direction == "east":
@@ -2367,7 +2371,7 @@ class StreetVendor(Scene):
             
         if not self.fresh_arrival:
             print(fill("You're standing in front of a street vendor. You can\
- buy food, weapons, and accessories from him. To your east is E 8th St.", 100))
+ buy certain items from him. Try 'buy from vendor.' To your east is E 8th St.", 100))
             value = UserInput(street_vendor)
             direction = value.user_input()
             if direction == "east":
@@ -2410,10 +2414,12 @@ class Alleyway(Scene):
             print(fill("You move north. It reeks of urine and body odor here.\
  You plug your nose, looking for the source of the stench. You don't have to look far - this\
  alley seems to have a permament occupant.", 100))
+            sleep(0.7)
             print()
             print(fill("You are in the alleyway. There is a dumpster to your right. Behind it sits a hobo,\
  asleep in his cardboard box with his ratty blanket and stained pillow. He appears to be using a yellow\
  newspaper to cover his face. You can see the tip of a shank poking out from underneath him.", 100))
+            sleep(1.3)
             print()
             print(fill("In the cardboard box, behind the hobo, you can see a locked suitcase. Looks\
  like you'll have to go through him to get it.", 100))
@@ -2430,12 +2436,14 @@ class Alleyway(Scene):
                 print(fill("The alleyway smells as bad as ever. There's a dumpster to your right. Behind it sits\
  a hobo, asleep in his cardboard box with his ratty blanket and stained pillow. He appears to be using a yellow\
  newspaper to cover his face. You can see the tip of a shank poking out from underneath him.", 100))
+                sleep(0.7)
                 print()
                 print(fill("In the cardboard box, behind the hobo, you can see a locked suitcase. Looks\
  like you'll have to go through him to get it.", 100))
             else:
                 print(fill("The cardboard box behind the dumpster is now vacant. In it lies a pillow,\
  a blanket, and a yellowed newspaper.", 100))
+                sleep(0.7)
                 if "suitcase" in self.room_items:
                     print()
                     print(fill("Great job getting the hobo out of the way. The locked suitcase is lying\
@@ -2583,6 +2591,7 @@ class Manhole(Scene):
  metal that offers access to the filthy sewers of downtown Manhattan. You\
  really shouldn't be able to lift it, but we're throwing all continuity out of\
  the window.", 100))
+            sleep(0.7)
             print()
             found = False
             for item in player.inventory:
@@ -2651,6 +2660,7 @@ class Bar(Scene):
             print(fill("You enter the country bar, a place that promises to be a rootin'-tootin'\
  good time. Several drunks are cheering and singing to the jukebox. You are acutely aware of\
  how sober you are.", 100))
+            sleep(0.7)
             print()
             print(fill("You stand at the door to The Tipsy Cow. The bartender is tending behind the bar\
  (imagine that). A quiet man is sitting at the end of the bar. He's staring at a girl and her friends across\
@@ -2797,8 +2807,9 @@ class ClothesStore(Scene):
     def enter(self):
         if self.fresh_arrival:
             self.fresh_arrival = False
-            print(fill("You're standing in an outlet store. There are racks on\
+            print(fill("You travel east. There are racks on\
  racks on racks of clothes. Maybe you could buy some from the cashier.", 100))
+            sleep(0.5)
             print()
             print(fill("You're standing in an outlet store. It looks like the type\
  of place that requires a dress code, it makes you feel less classy. To your\
@@ -2855,6 +2866,7 @@ class BreakRoom(Scene):
             self.fresh_arrival = False
             print(fill("You enter the break room. It's dreary in here. You wonder\
  how the employees are able to tolerate it.", 100))
+            sleep(0.5)
             print()
             print(fill("You see some chairs around a table with a purse sitting atop it.\
  Maybe there's some stuff in it. There is also a clock and a calendar on the wall. Not much else.\
@@ -2903,6 +2915,7 @@ class Restaurant(Scene):
                 self.fresh_arrival = False
                 print(fill("A fancy schmancy restaurant, Eau de la Cul. You're rusty\
  on your French, but the name doesn't sound pleasant.", 100))
+                sleep(0.5)
                 print()
                 print(fill("You are standing in a fancy restaurant. On the far side\
  you can see a waterfall and a grand piano. Lovely. There's a fancy woman at the table\
@@ -2966,9 +2979,10 @@ class BoxingArena(Scene):
     def enter(self):
         if self.fresh_arrival:
             self.fresh_arrival = False
-            print(fill("An intimidating boxing arena. You are acutely aware\
+            print(fill("Moving north, you enter the arean. You are acutely aware\
  of your lack of buff. Maybe fighting that boxer will put some meat on your\
  bones...", 100))
+            sleep(0.7)
             print()
             print(fill("You are standing in the corner of the boxing arena.\
  near the door is a fighter holding his jaw. He spots you and motions for you\
@@ -3126,11 +3140,9 @@ class UserInput():
         while True:
             print()
             user_input = input("> ").lower()
-            """
             
             sleep(0.5)
             
-            """
             words = user_input.split(" ")
             wordlist = list(words)
             verb = wordlist[0]
@@ -3171,8 +3183,8 @@ class UserInput():
                 print("talk, fight,")
                 print("quit")
                 print()
-                print("'look' will be your best friend in this game")
                 print("'look (item)' for info and specialized commands")
+                print("Advice: look often")
                 continue
 
 
@@ -3222,7 +3234,7 @@ class UserInput():
             	player.print_inventory()
 
  
-            # More verbs to define           
+            # The rest of the verbs           
 
 
             elif verb == "look":
@@ -3322,7 +3334,9 @@ class UserInput():
                                     player.inventory.remove(item)
                                     if player.drank == 6:
                                         #replit.clear()
-					#Thing on repl.it that clears the screen
+                                        
+                                        #A cute thing that clears the screen, thought it would add a nice effect
+                                        
                                         print(fill("You down your sixth drink. Everything you've done\
  up to this point becomes hazy. Maybe you should reconsider some life choices.",100))
                                 else:
@@ -3478,8 +3492,8 @@ class UserInput():
                         else:
                             print("There are no 'clothes' here.")
                             
-                            #I'm too lazy to make a separate clothes class and
-                            #implement a buy method, so this works.
+                            # ^ I'm too lazy to make a separate clothes class and
+                            #implement a buy method, so this works
                             
                     elif wordlist[1] == "from":
                         if noun in self.scene.room_characters:
@@ -3522,6 +3536,7 @@ class UserInput():
                                 isinstance(item, CashWeapons)):
                                     self.scene.sell(item)
                                 else:
+                                    #Funny, I'm pretty sure this condition is never used
                                     print("You can't sell '{}'.".format(noun))
                         if not found:
                             print("You don't have '{}'.".format(noun))
@@ -3561,6 +3576,7 @@ class UserInput():
                             noun = real_item[noun]
                             noun.play()
                         else:
+                            found = True
                             print("Sorry, you can't play '{}'.".format(noun))
                     elif (noun == "pool shark" or
                     noun == "pool" or noun == "shark" or noun == "game"):
